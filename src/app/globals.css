@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base (Light Mode) */
+:root {
+    --bg-color: #f8fafc;
+    /* Slate-50 */
+    --bg-gradient: radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(168, 85, 247, 0.05) 0%, transparent 40%);
+
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.15);
+
+    --secondary: #a855f7;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+
+    --surface: rgba(0, 0, 0, 0.03);
+    --surface-border: rgba(0, 0, 0, 0.06);
+    --surface-hover: rgba(0, 0, 0, 0.05);
+
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border-color: rgba(0, 0, 0, 0.05);
+
+    --text-main: #1e293b;
+    /* Slate-800 */
+    --text-dim: #64748b;
+    /* Slate-500 */
+    --text-dimmer: #cbd5e1;
+    /* Slate-300 */
+
+    --card-bg: #ffffff;
+}
+
+/* Dark Mode Overrides */
+.dark {
+    --bg-color: #030304;
+    --bg-gradient: radial-gradient(circle at 15% 15%, rgba(19, 19, 40, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 85% 85%, rgba(15, 15, 30, 0.4) 0%, transparent 50%);
+
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.3);
+
+    --surface: rgba(255, 255, 255, 0.03);
+    --surface-border: rgba(255, 255, 255, 0.08);
+    --surface-hover: rgba(255, 255, 255, 0.08);
+
+    --glass-bg: rgba(10, 10, 15, 0.6);
+    --glass-border-color: rgba(255, 255, 255, 0.08);
+
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+    --text-dimmer: #475569;
+
+    --card-bg: #0d0d12;
+}
+
+/* Base Styles */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: var(--bg-gradient);
+    background-attachment: fixed;
+    /* Parallax feel */
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* Scrollbar Polish */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 99px;
+    transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Animations */
+@keyframes slideUpFade {
+    0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@layer utilities {
+    .glass {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border-color);
+    }
+
+    .glass-strong {
+        background: var(--card-bg);
+        /* Use card background for strong glass */
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        border: 1px solid var(--glass-border-color);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .shadow-glow {
+        box-shadow: 0 0 40px -10px var(--accent-glow);
+    }
+
+    .animate-in {
+        animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+}

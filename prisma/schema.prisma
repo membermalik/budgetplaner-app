@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  text      String
+  amount    Float
+  category  String
+  date      String   // ISO YYYY-MM-DD
+  month     String   // YYYY-MM
+  accountId String?
+  
+  account   Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id        String   @id @default(cuid())
+  name      String
+  type      String
+  balance   Float
+  currency  String   @default("EUR")
+  color     String   @default("#000000")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions Transaction[]
+}
+
+model RecurringTransaction {
+  id           String   @id @default(cuid())
+  text         String
+  amount       Float
+  category     String
+  interval     String   @default("monthly")
+  dayOfMonth   Int
+  startDate    String
+  endDate      String?
+  lastExecuted String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Category {
+  key         String   @id
+  label       String
+  color       String
+  budgetLimit Float?
+}
+
+model Settings {
+  id            Int     @id @default(1)
+  currency      String  @default("EUR")
+  theme         String  @default("dark")
+  notifications Boolean @default(true)
+  budgetLimit   Float   @default(0)
+}
+
+model Sparkasse {
+  id               Int     @id @default(1)
+  balance          Float   @default(0)
+  goal             Float   @default(0)
+  monthlyDeposited Float   @default(0)
+  autoSaveAmount   Float   @default(0)
+  autoSaveEnabled  Boolean @default(false)
+  autoSaveDay      Int     @default(1)
+}
+
+model AccountType {
+    id    String @id
+    label String
+    emoji String
+}
