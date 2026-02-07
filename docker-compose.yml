@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: budgetplaner-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # Pre-configured connection to the internal database service
+      - DATABASE_URL=postgresql://postgres:budgetpassword@db:5432/budgetplanner
+      - NODE_ENV=production
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    container_name: budgetplaner-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=budgetpassword
+      - POSTGRES_DB=budgetplanner
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
