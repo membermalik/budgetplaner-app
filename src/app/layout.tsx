@@ -10,6 +10,8 @@ export const metadata: Metadata = {
     description: 'Deine persönliche Finanzverwaltung - Transaktionen, Sparen & Analyse',
 };
 
+import { AppLayout } from '@/components/layout/AppLayout';
+
 export default function RootLayout({
     children,
 }: {
@@ -21,7 +23,9 @@ export default function RootLayout({
                 <ThemeProvider>
                     <StoreInitializer />
                     <RecurringEvaluator />
-                    {children}
+                    <AppLayout>
+                        {children}
+                    </AppLayout>
                 </ThemeProvider>
             </body>
         </html>

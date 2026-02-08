@@ -1,25 +1,26 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { LayoutDashboard, Wallet, Settings, Upload, Menu, X, History as HistoryIcon, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 
 interface SidebarProps {
-    activeView: string;
-    onChangeView: (view: string) => void;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export function Sidebar({ activeView, onChangeView, isOpen, onClose }: SidebarProps) {
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
+    const pathname = usePathname();
+
     const menuItems = [
-        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { id: 'history', label: 'Verlauf', icon: HistoryIcon },
-        { id: 'recurring', label: 'Fixkosten', icon: RefreshCw },
-        { id: 'accounts', label: 'Konten', icon: Wallet },
-        { id: 'data', label: 'Daten', icon: Upload },
-        { id: 'settings', label: 'Einstellungen', icon: Settings },
+        { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+        { href: '/verlauf', label: 'Verlauf', icon: HistoryIcon },
+        { href: '/fixkosten', label: 'Fixkosten', icon: RefreshCw },
+        { href: '/konten', label: 'Konten', icon: Wallet },
+        { href: '/daten', label: 'Daten', icon: Upload },
+        { href: '/einstellungen', label: 'Einstellungen', icon: Settings },
     ];
 
     return (
@@ -55,14 +56,12 @@ export function Sidebar({ activeView, onChangeView, isOpen, onClose }: SidebarPr
                     <nav className="space-y-1 flex-1">
                         {menuItems.map((item) => {
                             const Icon = item.icon;
-                            const isActive = activeView === item.id;
+                            const isActive = pathname === item.href;
                             return (
-                                <button
-                                    key={item.id}
-                                    onClick={() => {
-                                        onChangeView(item.id);
-                                        onClose();
-                                    }}
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={onClose}
                                     className={cn(
                                         "w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group relative overflow-hidden",
                                         isActive
@@ -80,7 +79,7 @@ export function Sidebar({ activeView, onChangeView, isOpen, onClose }: SidebarPr
                                     <span className="font-medium tracking-wide text-sm">
                                         {item.label}
                                     </span>
-                                </button>
+                                </Link>
                             );
                         })}
                     </nav>

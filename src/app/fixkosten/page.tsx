@@ -1,0 +1,56 @@
+'use client';
+
+import { useState } from 'react';
+import { RecurringManager } from '@/components/settings/RecurringManager';
+import { Modal } from '@/components/ui/Modal';
+import { TransactionForm } from '@/components/transactions/TransactionForm';
+import { RecurringTransaction } from '@/types';
+
+export default function RecurringPage() {
+    const [editRecurringTransaction, setEditRecurringTransaction] = useState<RecurringTransaction | null>(null);
+    const [initialIsRecurring, setInitialIsRecurring] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleAdd = () => {
+        setEditRecurringTransaction(null);
+        setInitialIsRecurring(true);
+        setShowModal(true);
+    };
+
+    const handleEdit = (transaction: RecurringTransaction) => {
+        setEditRecurringTransaction(transaction);
+        setInitialIsRecurring(true);
+        setShowModal(true);
+    };
+
+    const handleClose = () => {
+        setEditRecurringTransaction(null);
+        setInitialIsRecurring(false);
+        setShowModal(false);
+    };
+
+    return (
+        <div className="space-y-6 animate-in fade-in duration-500 max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold">Fixkosten</h2>
+
+            <RecurringManager
+                onAdd={handleAdd}
+                onEdit={handleEdit}
+            />
+
+            {/* Modal */}
+            <Modal
+                isOpen={showModal}
+                onClose={handleClose}
+                title={editRecurringTransaction ? "Dauerauftrag bearbeiten" : "Neuer Dauerauftrag"}
+            >
+                <TransactionForm
+                    editRecurringTransaction={editRecurringTransaction}
+                    initialIsRecurring={initialIsRecurring}
+                    onCancel={handleClose}
+                    onSuccess={handleClose}
+                />
+            </Modal>
+        </div>
+    );
+}

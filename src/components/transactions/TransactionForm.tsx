@@ -25,7 +25,7 @@ export function TransactionForm({
     initialIsRecurring = false,
     accountId
 }: TransactionFormProps) {
-    const { categories, addTransaction, updateTransaction, addRecurringTransaction, updateRecurringTransaction } = useBudgetStore();
+    const { categories, accounts, activeAccountId, addTransaction, updateTransaction, addRecurringTransaction, updateRecurringTransaction } = useBudgetStore();
 
     // Determine initial values
     const initialData = editTransaction || editRecurringTransaction;
@@ -37,6 +37,8 @@ export function TransactionForm({
     const [text, setText] = useState(initialData?.text || '');
     const [amount, setAmount] = useState(initialData ? Math.abs(initialData.amount).toString() : '');
     const [category, setCategory] = useState(initialData?.category || 'General');
+    // Account Selection
+    const [selectedAccountId, setSelectedAccountId] = useState(accountId || editTransaction?.accountId || activeAccountId || (accounts.length > 0 ? accounts[0].id : ''));
 
     // Recurring state
     const [isRecurring, setIsRecurring] = useState(initialIsRecurring || !!editRecurringTransaction);
@@ -71,6 +73,11 @@ export function TransactionForm({
     const categoryOptions = Object.entries(categories).map(([key, value]) => ({
         value: key,
         label: value.label,
+    }));
+
+    const accountOptions = accounts.map(acc => ({
+        value: acc.id,
+        label: `${acc.name} (${acc.balance.toFixed(2)}€)`
     }));
 
     const getFieldError = useCallback((field: string) => {
@@ -124,7 +131,7 @@ export function TransactionForm({
                     text: text.trim(),
                     amount: finalAmount,
                     category,
-                    accountId: editTransaction.accountId || accountId // Preserve existing or use new
+                    accountId: selectedAccountId // Update account
                 });
             } else {
                 // Add Normal Transaction
@@ -134,7 +141,7 @@ export function TransactionForm({
                     category,
                     date: '',
                     month: '',
-                    accountId // Use the passed prop
+                    accountId: selectedAccountId // Use selected account
                 });
             }
 
@@ -232,6 +239,16 @@ export function TransactionForm({
                     onChange={(e) => setCategory(e.target.value)}
                     options={categoryOptions}
                     disabled={isLoading}
+                />
+
+                {/* Account Selection */}
+                <Select
+                    id="account"
+                    label="Konto"
+                    value={selectedAccountId}
+                    onChange={(e) => setSelectedAccountId(e.target.value)}
+                    options={accountOptions}
+                    disabled={isLoading || !!accountId} // Disable if fixed account passed via prop
                 />
 
                 {/* Recurring Toggle - Only for new transactions OR when editing recurring */}
