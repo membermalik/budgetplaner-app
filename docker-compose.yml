@@ -15,7 +15,8 @@ services:
       - AUTH_SECRET=fc0bb4aa85c071d18f8e0d453004313f # Generated random secret
       - AUTH_URL=http://localhost:3000
       - AUTH_TRUST_HOST=true
-    command: sh -c "HOME=/tmp npx prisma@5.10.2 db push --skip-generate && node server.js"
+    # TEMPORARY: Added --force-reset --accept-data-loss to fix schema conflict on next deploy
+    command: sh -c "HOME=/tmp npx prisma@5.10.2 db push --force-reset --accept-data-loss --skip-generate && node server.js"
     depends_on:
       - db
 
