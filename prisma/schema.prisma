@@ -21,8 +21,10 @@ model Transaction {
   date      String   // ISO YYYY-MM-DD
   month     String   // YYYY-MM
   accountId String?
+  userId    String
   
-  account   Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account   Account? @relation(fields: [accountId], references: [id], onDelete: SetNull) // Create SetNull to avoid deleting transactions if account is deleted? Or Cascade? Let's stick to Cascade or SetNull. detailed plan said Cascade usually. Let's stick to original behavior for account but added user.
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -36,6 +38,9 @@ model Account {
   color     String   @default("#000000")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   transactions Transaction[]
 }
@@ -51,6 +56,8 @@ model RecurringTransaction {
   endDate      String?
   lastExecuted String?
   isActive     Boolean  @default(true)
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -60,6 +67,10 @@ model Category {
   label       String
   color       String
   budgetLimit Float?
+  userId      String?
+  user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([key, userId]) // Allow same category key for different users, or global categories? Let's make it simple for now, maybe just add userId.
 }
 
 model Settings {
@@ -68,10 +79,14 @@ model Settings {
   theme         String  @default("dark")
   notifications Boolean @default(true)
   budgetLimit   Float   @default(0)
+  userId        String  @unique // One settings per user
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Sparkasse {
-  id               Int     @id @default(1)
+  id               Int     @id @default(autoincrement())
+  userId           String  @unique
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   balance          Float   @default(0)
   goal             Float   @default(0)
   monthlyDeposited Float   @default(0)
@@ -84,4 +99,21 @@ model AccountType {
     id    String @id
     label String
     emoji String
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts              Account[]
+  transactions          Transaction[]
+  recurringTransactions RecurringTransaction[]
+  settings              Settings?
+  sparkasse             Sparkasse?
+  categories            Category[]
 }

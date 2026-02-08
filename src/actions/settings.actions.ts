@@ -3,13 +3,17 @@
 import prisma from '@/lib/prisma';
 import { AppSettings, SparkasseData } from '@/types';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
 
 // --- Settings ---
 
 export async function getSettings(): Promise<AppSettings | null> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return null;
+
         const settings = await prisma.settings.findUnique({
-            where: { id: 1 },
+            where: { userId: session.user.id },
         });
 
         if (!settings) return null;
@@ -28,9 +32,11 @@ export async function getSettings(): Promise<AppSettings | null> {
 
 export async function updateSettings(data: Partial<AppSettings>): Promise<AppSettings | null> {
     try {
-        // Upsert ensures we create it if it doesn't exist (ID 1 is singleton)
+        const session = await auth();
+        if (!session?.user?.id) return null;
+
         const settings = await prisma.settings.upsert({
-            where: { id: 1 },
+            where: { userId: session.user.id },
             update: {
                 ...(data.currency && { currency: data.currency }),
                 ...(data.theme && { theme: data.theme }),
@@ -38,6 +44,7 @@ export async function updateSettings(data: Partial<AppSettings>): Promise<AppSet
                 ...(data.budgetLimit !== undefined && { budgetLimit: data.budgetLimit }),
             },
             create: {
+                userId: session.user.id,
                 currency: data.currency || 'EUR',
                 theme: data.theme || 'dark',
                 notifications: data.notifications ?? true,
@@ -62,7 +69,10 @@ export async function updateSettings(data: Partial<AppSettings>): Promise<AppSet
 
 export async function getSparkasseData(): Promise<SparkasseData | null> {
     try {
-        const data = await prisma.sparkasse.findUnique({ where: { id: 1 } });
+        const session = await auth();
+        if (!session?.user?.id) return null;
+
+        const data = await prisma.sparkasse.findUnique({ where: { userId: session.user.id } });
         if (!data) return null;
 
         return {
@@ -82,7 +92,10 @@ export async function getSparkasseData(): Promise<SparkasseData | null> {
 
 export async function updateSparkasse(data: Partial<SparkasseData> | { settings?: Partial<SparkasseData['settings']> }): Promise<SparkasseData | null> {
     try {
-        const current = await getSparkasseData();
+        const session = await auth();
+        if (!session?.user?.id) return null;
+
+        // We can't reuse getSparkasseData directly inside here cleanly if we want to optimize, but let's just proceed with upsert
         const d = data as any;
         const settingsUpdate = d.settings || {};
 
@@ -97,9 +110,10 @@ export async function updateSparkasse(data: Partial<SparkasseData> | { settings?
         if (settingsUpdate.autoSaveDay !== undefined) prismaUpdate.autoSaveDay = settingsUpdate.autoSaveDay;
 
         const updated = await prisma.sparkasse.upsert({
-            where: { id: 1 },
+            where: { userId: session.user.id },
             update: prismaUpdate,
             create: {
+                userId: session.user.id,
                 balance: d.balance || 0,
                 goal: d.goal || 0,
                 monthlyDeposited: d.monthlyDeposited || 0,

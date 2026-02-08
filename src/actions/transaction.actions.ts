@@ -3,10 +3,15 @@
 import prisma from '@/lib/prisma';
 import { Transaction } from '@/types';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
 
 export async function getTransactions(): Promise<Transaction[]> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return [];
+
         const transactions = await prisma.transaction.findMany({
+            where: { userId: session.user.id },
             orderBy: { date: 'desc' },
         });
 
@@ -23,6 +28,9 @@ export async function getTransactions(): Promise<Transaction[]> {
 
 export async function createTransaction(data: Omit<Transaction, 'id'>): Promise<Transaction | null> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return null;
+
         const transaction = await prisma.transaction.create({
             data: {
                 text: data.text,
@@ -31,6 +39,7 @@ export async function createTransaction(data: Omit<Transaction, 'id'>): Promise<
                 date: data.date,
                 month: data.month,
                 accountId: data.accountId,
+                userId: session.user.id,
             },
         });
 
@@ -47,6 +56,12 @@ export async function createTransaction(data: Omit<Transaction, 'id'>): Promise<
 
 export async function updateTransaction(id: number, data: Partial<Transaction>): Promise<Transaction | null> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return null;
+
+        const existing = await prisma.transaction.findUnique({ where: { id } });
+        if (!existing || existing.userId !== session.user.id) return null;
+
         const transaction = await prisma.transaction.update({
             where: { id },
             data: {
@@ -72,6 +87,12 @@ export async function updateTransaction(id: number, data: Partial<Transaction>):
 
 export async function deleteTransaction(id: number): Promise<boolean> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return false;
+
+        const existing = await prisma.transaction.findUnique({ where: { id } });
+        if (!existing || existing.userId !== session.user.id) return false;
+
         await prisma.transaction.delete({
             where: { id },
         });

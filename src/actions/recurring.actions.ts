@@ -3,10 +3,16 @@
 import prisma from '@/lib/prisma';
 import { RecurringTransaction } from '@/types';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
 
 export async function getRecurringTransactions(): Promise<RecurringTransaction[]> {
     try {
-        const transactions = await prisma.recurringTransaction.findMany();
+        const session = await auth();
+        if (!session?.user?.id) return [];
+
+        const transactions = await prisma.recurringTransaction.findMany({
+            where: { userId: session.user.id },
+        });
         return transactions.map((t: any) => ({
             ...t,
             interval: t.interval as 'monthly', // Cast for now as only monthly is supported
@@ -19,6 +25,9 @@ export async function getRecurringTransactions(): Promise<RecurringTransaction[]
 
 export async function createRecurringTransaction(data: Omit<RecurringTransaction, 'id' | 'lastExecuted' | 'isActive'>): Promise<RecurringTransaction | null> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return null;
+
         const transaction = await prisma.recurringTransaction.create({
             data: {
                 text: data.text,
@@ -30,6 +39,7 @@ export async function createRecurringTransaction(data: Omit<RecurringTransaction
                 endDate: data.endDate,
                 isActive: true,
                 lastExecuted: null,
+                userId: session.user.id,
             },
         });
         revalidatePath('/');
@@ -46,6 +56,12 @@ export async function createRecurringTransaction(data: Omit<RecurringTransaction
 
 export async function updateRecurringTransaction(id: string, data: Partial<RecurringTransaction>): Promise<RecurringTransaction | null> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return null;
+
+        const existing = await prisma.recurringTransaction.findUnique({ where: { id } });
+        if (!existing || existing.userId !== session.user.id) return null;
+
         const transaction = await prisma.recurringTransaction.update({
             where: { id },
             data: {
@@ -73,6 +89,12 @@ export async function updateRecurringTransaction(id: string, data: Partial<Recur
 
 export async function deleteRecurringTransaction(id: string): Promise<boolean> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return false;
+
+        const existing = await prisma.recurringTransaction.findUnique({ where: { id } });
+        if (!existing || existing.userId !== session.user.id) return false;
+
         await prisma.recurringTransaction.delete({
             where: { id },
         });

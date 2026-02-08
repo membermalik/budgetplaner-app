@@ -2,9 +2,10 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Wallet, Settings, Upload, Menu, X, History as HistoryIcon, RefreshCw } from 'lucide-react';
+import { LayoutDashboard, Wallet, Settings, Upload, Menu, X, History as HistoryIcon, RefreshCw, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
+import { logout } from '@/actions/auth.actions';
 
 interface SidebarProps {
     isOpen: boolean;
@@ -85,8 +86,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     </nav>
 
                     {/* Footer / User Info could go here */}
-                    <div className="pt-6 border-t border-surface-border">
-                        <p className="text-xs text-text-dim/50 text-center">
+                    <div className="pt-6 mt-auto border-t border-surface-border">
+                        <button
+                            onClick={() => logout()}
+                            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-text-dim hover:text-danger hover:bg-danger/10 transition-all duration-300 group"
+                        >
+                            <LogOut size={20} className="group-hover:text-danger transition-colors duration-300" />
+                            <span className="font-medium tracking-wide text-sm group-hover:text-danger transition-colors duration-300">Abmelden</span>
+                        </button>
+                        <p className="text-xs text-text-dim/50 text-center mt-4">
                             v1.0.0 Pro
                         </p>
                     </div>

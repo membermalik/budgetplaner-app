@@ -3,12 +3,17 @@
 import prisma from '@/lib/prisma';
 import { Account, AccountType } from '@/types';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
 
 // --- Accounts ---
 
 export async function getAccounts(): Promise<Account[]> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return [];
+
         const accounts = await prisma.account.findMany({
+            where: { userId: session.user.id },
             orderBy: { createdAt: 'desc' },
         });
 
@@ -25,6 +30,9 @@ export async function getAccounts(): Promise<Account[]> {
 
 export async function createAccount(data: Omit<Account, 'id' | 'createdAt'>): Promise<Account | null> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return null;
+
         const account = await prisma.account.create({
             data: {
                 name: data.name,
@@ -32,6 +40,7 @@ export async function createAccount(data: Omit<Account, 'id' | 'createdAt'>): Pr
                 balance: data.balance,
                 currency: data.currency,
                 color: data.color,
+                userId: session.user.id,
             },
         });
 
@@ -49,6 +58,12 @@ export async function createAccount(data: Omit<Account, 'id' | 'createdAt'>): Pr
 
 export async function updateAccount(id: string, data: Partial<Account>): Promise<Account | null> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return null;
+
+        const existing = await prisma.account.findUnique({ where: { id } });
+        if (!existing || existing.userId !== session.user.id) return null;
+
         const account = await prisma.account.update({
             where: { id },
             data: {
@@ -74,6 +89,12 @@ export async function updateAccount(id: string, data: Partial<Account>): Promise
 
 export async function deleteAccount(id: string): Promise<boolean> {
     try {
+        const session = await auth();
+        if (!session?.user?.id) return false;
+
+        const existing = await prisma.account.findUnique({ where: { id } });
+        if (!existing || existing.userId !== session.user.id) return false;
+
         await prisma.account.delete({
             where: { id },
         });
