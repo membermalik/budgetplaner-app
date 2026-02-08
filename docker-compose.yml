@@ -11,6 +11,7 @@ services:
       # Pre-configured connection to the internal database service
       - DATABASE_URL=postgresql://postgres:budgetpassword@db:5432/budgetplanner
       - NODE_ENV=production
+    command: sh -c "npx prisma db push && node server.js"
     depends_on:
       - db
 
