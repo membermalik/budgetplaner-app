@@ -13,7 +13,7 @@ services:
       - NODE_ENV=production
       # Auth.js Configuration (Zero-Config Default)
       - AUTH_SECRET=fc0bb4aa85c071d18f8e0d453004313f # Generated random secret
-      - AUTH_URL=http://localhost:3000
+      - AUTH_URL=https://budget.member-business.de
       - AUTH_TRUST_HOST=true
     command: sh -c "HOME=/tmp npx prisma@5.10.2 db push --skip-generate && node server.js"
     depends_on:
