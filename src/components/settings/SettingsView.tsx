@@ -8,8 +8,9 @@ import { useBudgetStore } from '@/store/budgetStore';
 import { downloadFile } from '@/lib/utils';
 import { Palette } from 'lucide-react';
 import { CategoryManager } from './CategoryManager';
+import { UserManagement } from './UserManagement';
 
-type Tab = 'general' | 'appearance' | 'categories' | 'data';
+type Tab = 'general' | 'appearance' | 'categories' | 'users' | 'data';
 
 export function SettingsView() {
     const [activeTab, setActiveTab] = useState<Tab>('general');
@@ -91,6 +92,7 @@ export function SettingsView() {
         { id: 'general' as Tab, label: 'Allgemein', icon: '⚙️' },
         { id: 'appearance' as Tab, label: 'Erscheinungsbild', icon: '🎨' },
         { id: 'categories' as Tab, label: 'Kategorien', icon: '🏷️' },
+        { id: 'users' as Tab, label: 'Benutzer', icon: '👥' },
         { id: 'data' as Tab, label: 'Daten & Export', icon: '💾' },
     ];
 
@@ -237,6 +239,11 @@ export function SettingsView() {
                                 Alles zurücksetzen
                             </Button>
                         </div>
+                    </div>
+                )}
+                {activeTab === 'users' && (
+                    <div className="space-y-6 max-w-xl animate-in fade-in slide-in-from-bottom-2">
+                        <UserManagement />
                     </div>
                 )}
             </div>

@@ -1,37 +1,24 @@
 'use server';
 
-import { auth } from '@/auth';
+import { z } from 'zod';
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import { auth } from '@/auth';
 
 const CreateUserSchema = z.object({
-    name: z.string().min(2),
-    email: z.string().email(),
-    password: z.string().min(6),
+    name: z.string().min(2, 'Name muss mindestens 2 Zeichen lang sein'),
+    email: z.string().email('Ungültige Email-Adresse'),
+    password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
 });
 
-export async function createClient(prevState: any, formData: FormData) {
+export async function createUser(prevState: string | undefined, formData: FormData) {
+    // 1. Check if current user is authenticated
     const session = await auth();
-
-    // 1. Check if user is logged in
     if (!session?.user?.email) {
-        return { error: 'Unauthorized' };
+        return 'Fehler: Nicht authentifiziert.';
     }
 
-    // 2. Check if user is ADMIN
-    // Note: We need to extend the session type to include role, 
-    // but for now we'll check the DB directly for security.
-    const adminUser = await (prisma as any).user.findUnique({
-        where: { email: session.user.email },
-    });
-
-    if (adminUser?.role !== 'ADMIN') {
-        return { error: 'Forbidden: Only Admins can create users.' };
-    }
-
-    // 3. Validate Input
+    // 2. Validate Input
     const validatedFields = CreateUserSchema.safeParse({
         name: formData.get('name'),
         email: formData.get('email'),
@@ -39,62 +26,35 @@ export async function createClient(prevState: any, formData: FormData) {
     });
 
     if (!validatedFields.success) {
-        return { error: 'Invalid fields' };
+        return 'Ungültige Eingaben.';
     }
 
     const { name, email, password } = validatedFields.data;
 
-    // 4. Check uniqueness
-    const existingUser = await (prisma as any).user.findUnique({
-        where: { email },
-    });
-
-    if (existingUser) {
-        return { error: 'User already exists' };
-    }
-
-    // 5. Create User
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     try {
+        // 3. Check for duplicates
+        const existingUser = await (prisma as any).user.findUnique({
+            where: { email },
+        });
+
+        if (existingUser) {
+            return 'Fehler: Diese Email existiert bereits.';
+        }
+
+        // 4. Create User
+        const hashedPassword = await bcrypt.hash(password, 10);
         await (prisma as any).user.create({
             data: {
                 name,
                 email,
                 password: hashedPassword,
-                role: 'USER', // Default role is USER
+                role: 'USER',
             },
         });
 
-        revalidatePath('/admin');
-        return { success: 'Client created successfully!' };
+        return 'Erfolg: Benutzer wurde erstellt!';
     } catch (error) {
-        console.error(error);
-        return { error: 'Database Error: Failed to create user.' };
+        console.error('Create User Error:', error);
+        return 'Datenbankfehler beim Erstellen des Benutzers.';
     }
-}
-
-export async function getClients() {
-    const session = await auth();
-    if (!session?.user?.email) return [];
-
-    const adminUser = await (prisma as any).user.findUnique({
-        where: { email: session.user.email },
-    });
-
-    if (adminUser?.role !== 'ADMIN') return [];
-
-    return await (prisma as any).user.findMany({
-        where: { role: 'USER' },
-        orderBy: { createdAt: 'desc' },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            createdAt: true,
-            _count: {
-                select: { accounts: true, transactions: true },
-            }
-        }
-    });
 }
