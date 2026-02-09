@@ -33,19 +33,20 @@ export const authConfig = {
                 if (isLoggedIn) return true;
                 return false; // Redirect unauthenticated to login
             }
-            return true;
-        },
-        session({ session, token }) {
-            if (token.sub && session.user) {
-                session.user.id = token.sub;
-            }
-            return session;
-        },
-        jwt({ token, user }) {
-            if (user) {
-                token.sub = user.id;
-            }
-            return token;
-        },
+        }
+            return isLoggedIn;
     },
+    session({ session, token }) {
+        if (token.sub && session.user) {
+            session.user.id = token.sub;
+        }
+        return session;
+    },
+    jwt({ token, user }) {
+        if (user) {
+            token.sub = user.id;
+        }
+        return token;
+    },
+},
 } satisfies NextAuthConfig;
