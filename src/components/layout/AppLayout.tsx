@@ -32,6 +32,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         }
     };
 
+    // Check for public pages
+    const isPublicPage = pathname === '/' || pathname === '/login' || pathname === '/register';
+
+    if (isPublicPage) {
+        return <div className="min-h-screen bg-black text-white">{children}</div>;
+    }
+
     return (
         <div className="flex min-h-screen bg-[--bg-color] transition-colors duration-300">
             {/* Sidebar */}
@@ -41,7 +48,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             />
 
             {/* Main Content Area */}
-            <main className="flex-1 min-w-0">
+            <main className="flex-1 min-w-0 lg:pl-64">
                 {/* Mobile Header */}
                 <header className="lg:hidden flex items-center justify-between p-4 border-b border-white/5 bg-surface/50 backdrop-blur-xl sticky top-0 z-30">
                     <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(true)}>
@@ -56,40 +63,46 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     </div>
                 </header>
 
-                {/* Desktop Header / Toolbar */}
-                <div className="hidden lg:flex items-center justify-between p-6 pb-2">
-                    <h2 className="text-xl font-bold text-text-dim capitalize">
-                        {getTitle()}
-                    </h2>
-                    <div className="flex gap-3">
-                        {/* Search Button */}
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => setShowSearch(true)}
-                            className="rounded-full w-10 h-10 p-0 flex items-center justify-center"
-                            title="Suche"
-                        >
-                            <Search size={20} />
-                        </Button>
+                <div className="p-4 lg:p-8 pb-32 max-w-7xl mx-auto space-y-8">
+                    {/* Desktop Header / Toolbar */}
+                    <div className="hidden lg:flex items-center justify-between pb-6 border-b border-white/5">
+                        <div>
+                            <h2 className="text-2xl font-bold text-white capitalize tracking-tight">
+                                {getTitle()}
+                            </h2>
+                            <p className="text-sm text-gray-400 mt-1">Überblick über deine Finanzen</p>
+                        </div>
 
-                        {/* Transaction Button */}
-                        <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={() => setShowTransactionModal(true)}
-                            className="bg-accent hover:bg-accent/90 text-white rounded-full w-10 h-10 p-0 flex items-center justify-center shadow-glow"
-                        >
-                            <Plus size={20} />
-                        </Button>
+                        <div className="flex items-center gap-3">
+                            {/* Search Button */}
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => setShowSearch(true)}
+                                className="h-10 w-10 p-0 rounded-full flex items-center justify-center bg-gray-800/50 hover:bg-gray-700 text-gray-400 hover:text-white transition-all"
+                                title="Suche"
+                            >
+                                <Search size={18} />
+                            </Button>
 
-                        <div className="w-10 h-10 flex items-center justify-center">
-                            <NotificationsCenter />
+                            {/* Notifications */}
+                            <div className="h-10 w-10 flex items-center justify-center bg-gray-800/50 rounded-full hover:bg-gray-700 transition-all">
+                                <NotificationsCenter />
+                            </div>
+
+                            {/* Transaction Button */}
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={() => setShowTransactionModal(true)}
+                                className="h-10 px-6 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-[0_0_20px_-5px_rgba(37,99,235,0.5)] transition-all flex items-center gap-2"
+                            >
+                                <Plus size={18} />
+                                <span>Neu</span>
+                            </Button>
                         </div>
                     </div>
-                </div>
 
-                <div className="p-4 lg:p-8 pb-32">
                     {children}
                 </div>
             </main>
