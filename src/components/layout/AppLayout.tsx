@@ -22,7 +22,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     // Helper to determine title based on path
     const getTitle = () => {
         switch (pathname) {
-            case '/': return 'Willkommen zurück';
+            case '/': return 'Startseite';
+            case '/dashboard': return 'Dashboard';
             case '/verlauf': return 'Transaktionsverlauf';
             case '/konten': return 'Kontenverwaltung';
             case '/fixkosten': return 'Fixkosten';

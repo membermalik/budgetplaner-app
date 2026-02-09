@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { toast } from 'sonner';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -93,6 +94,7 @@ export function TransactionForm({
         const validationErrors = validateTransaction(text, amount);
         if (validationErrors.length > 0) {
             setErrors(validationErrors);
+            toast.error('Bitte überprüfe die Eingabefelder.');
             return;
         }
 
@@ -146,6 +148,13 @@ export function TransactionForm({
             }
 
             setSuccess(true);
+            const msg = isEdit
+                ? 'Eintrag aktualisiert!'
+                : isRecurring
+                    ? 'Dauerauftrag eingerichtet!'
+                    : 'Transaktion hinzugefügt!';
+            toast.success(msg);
+
             setTimeout(() => {
                 // Reset form only if not editing (or if we want to close modal, usually parent handles closes)
                 if (!isEdit) {
@@ -157,7 +166,7 @@ export function TransactionForm({
                 }
                 setSuccess(false);
                 onSuccess?.();
-            }, 1000);
+            }, 500);
 
             if (!isRecurring && !editRecurringTransaction) onCancel?.();
         } finally {
@@ -302,39 +311,6 @@ export function TransactionForm({
                                 />
                             </div>
                         )}
-                    </div>
-                )}
-
-                {/* Success Message */}
-                {success && (
-                    <div className="mb-4 p-4 rounded-lg bg-success/10 border border-success/30 flex items-center gap-3">
-                        <CheckCircle size={20} className="text-success flex-shrink-0" />
-                        <p className="text-sm text-success font-medium">
-                            {isEdit
-                                ? 'Eintrag aktualisiert!'
-                                : isRecurring
-                                    ? 'Dauerauftrag eingerichtet!'
-                                    : 'Transaktion hinzugefügt!'}
-                        </p>
-                    </div>
-                )}
-
-                {/* General Errors */}
-                {errors.length > 0 && !success && (
-                    <div className="mb-4 p-4 rounded-lg bg-danger/10 border border-danger/30">
-                        <div className="flex items-center gap-2 mb-2">
-                            <AlertCircle size={18} className="text-danger flex-shrink-0" />
-                            <p className="text-sm font-medium text-danger">
-                                Bitte überprüfe folgendes:
-                            </p>
-                        </div>
-                        <ul className="list-disc list-inside space-y-1">
-                            {errors.map((error) => (
-                                <li key={error.field} className="text-sm text-danger/90">
-                                    {error.message}
-                                </li>
-                            ))}
-                        </ul>
                     </div>
                 )}
 

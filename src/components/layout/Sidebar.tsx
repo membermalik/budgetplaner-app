@@ -16,7 +16,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname();
 
     const menuItems = [
-        { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+        { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { href: '/verlauf', label: 'Verlauf', icon: HistoryIcon },
         { href: '/fixkosten', label: 'Fixkosten', icon: RefreshCw },
         { href: '/konten', label: 'Konten', icon: Wallet },

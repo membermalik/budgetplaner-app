@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, BarChart3, Lock, Zap } from 'lucide-react';
+import { HeroSection } from '@/components/landing/HeroSection';
 
 export default function LandingPage() {
     return (
@@ -35,41 +36,8 @@ export default function LandingPage() {
                 {/* Background Gradients */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] -z-10" />
 
-                <div className="max-w-3xl mx-auto text-center space-y-8">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-blue-400 mb-4 animate-fade-in">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                        </span>
-                        Exklusiver Zugang verfügbar
-                    </div>
-
-                    <h1 className="text-5xl sm:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-gray-500 pb-2">
-                        Finanzplanung für <br />
-                        die Elite.
-                    </h1>
-
-                    <p className="text-lg text-gray-400 max-w-xl mx-auto leading-relaxed">
-                        Übernehmen Sie die volle Kontrolle über Ihre Vermögenswerte.
-                        Präzises Tracking, intelligente Analysen und maximale Datensicherheit
-                        in einer exklusiven Private-Cloud-Umgebung.
-                    </p>
-
-                    <div className="flex items-center justify-center gap-4 pt-4">
-                        <Link
-                            href="/login"
-                            className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-blue-600 px-8 font-medium text-white transition-all duration-300 hover:bg-blue-700 hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)]"
-                        >
-                            <span className="mr-2">Zum Login</span>
-                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                        </Link>
-                        <Link
-                            href="mailto:contact@member-business.de"
-                            className="inline-flex h-12 items-center justify-center rounded-full border border-white/10 bg-white/5 px-8 font-medium text-white transition-all hover:bg-white/10"
-                        >
-                            Demo anfragen
-                        </Link>
-                    </div>
+                <div className="max-w-3xl mx-auto">
+                    <HeroSection />
                 </div>
 
                 {/* Feature Grid */}
