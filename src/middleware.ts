@@ -4,6 +4,10 @@ import { authConfig } from './auth.config';
 export default NextAuth(authConfig).auth;
 
 export const config = {
-    // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-    matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+    // Protect all routes EXCEPT:
+    // - / (Landing Page)
+    // - /api (API routes)
+    // - /_next (Static files)
+    // - /login (Auth page)
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login|$).*)'],
 };

@@ -88,7 +88,5 @@ export async function authenticate(
 }
 
 export async function logout() {
-    await signIn(); // Wait, signOut is what I want. 
-    // I need to import signOut from auth, not signIn.
-    // Check auth.ts exports.
+    await signOut({ redirectTo: '/' });
 }

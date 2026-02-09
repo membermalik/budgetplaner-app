@@ -9,11 +9,20 @@ export const authConfig = {
     callbacks: {
         authorized({ auth, request: { nextUrl } }) {
             const isLoggedIn = !!auth?.user;
-            const isOnDashboard = nextUrl.pathname.startsWith('/');
-            const isLoginPage = nextUrl.pathname.startsWith('/login');
-            const isRegisterPage = nextUrl.pathname.startsWith('/register');
+            const isOnDashboard = nextUrl.pathname.startsWith('/dashboard') ||
+                nextUrl.pathname.startsWith('/konten') ||
+                nextUrl.pathname.startsWith('/verlauf') ||
+                nextUrl.pathname.startsWith('/fixkosten') ||
+                nextUrl.pathname.startsWith('/daten') ||
+                nextUrl.pathname.startsWith('/einstellungen') ||
+                nextUrl.pathname.startsWith('/admin');
 
-            if (isLoginPage || isRegisterPage) {
+            const isLoginPage = nextUrl.pathname.startsWith('/login');
+
+            // Allow public access to landing page
+            if (nextUrl.pathname === '/') return true;
+
+            if (isLoginPage) {
                 if (isLoggedIn) {
                     return Response.redirect(new URL('/', nextUrl));
                 }
@@ -22,7 +31,7 @@ export const authConfig = {
 
             if (isOnDashboard) {
                 if (isLoggedIn) return true;
-                return false; // Redirect unauthenticated users to login page
+                return false; // Redirect unauthenticated to login
             }
             return true;
         },
