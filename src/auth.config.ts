@@ -22,7 +22,7 @@ export const authConfig = {
             // Allow public access to landing page
             if (nextUrl.pathname === '/') return true;
 
-            if (isLoginPage || nextUrl.pathname.startsWith('/register')) {
+            if (isLoginPage) {
                 if (isLoggedIn) {
                     return Response.redirect(new URL('/dashboard', nextUrl));
                 }
