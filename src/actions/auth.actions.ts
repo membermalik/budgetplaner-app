@@ -72,7 +72,7 @@ export async function authenticate(
     try {
         await signIn('credentials', {
             ...Object.fromEntries(formData.entries()),
-            redirectTo: '/',
+            redirectTo: '/dashboard',
         });
     } catch (error) {
         if (error instanceof AuthError) {
