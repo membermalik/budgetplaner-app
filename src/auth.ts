@@ -40,4 +40,16 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
             },
         }),
     ],
+    trustHost: true,
+    cookies: {
+        sessionToken: {
+            name: `__Secure-authjs.session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: 'lax',
+                path: '/',
+                secure: true,
+            },
+        },
+    },
 });
