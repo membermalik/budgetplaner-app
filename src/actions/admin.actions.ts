@@ -11,11 +11,16 @@ const CreateUserSchema = z.object({
     password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
 });
 
-export async function createUser(prevState: string | undefined, formData: FormData) {
+export type ActionState = {
+    error?: string;
+    success?: string;
+};
+
+export async function createUser(prevState: ActionState | undefined, formData: FormData) {
     // 1. Check if current user is authenticated
     const session = await auth();
     if (!session?.user?.email) {
-        return 'Fehler: Nicht authentifiziert.';
+        return { error: 'Fehler: Nicht authentifiziert.' };
     }
 
     // 2. Validate Input
@@ -26,7 +31,7 @@ export async function createUser(prevState: string | undefined, formData: FormDa
     });
 
     if (!validatedFields.success) {
-        return 'Ungültige Eingaben.';
+        return { error: 'Ungültige Eingaben.' };
     }
 
     const { name, email, password } = validatedFields.data;
@@ -38,7 +43,7 @@ export async function createUser(prevState: string | undefined, formData: FormDa
         });
 
         if (existingUser) {
-            return 'Fehler: Diese Email existiert bereits.';
+            return { error: 'Fehler: Diese Email existiert bereits.' };
         }
 
         // 4. Create User
@@ -52,9 +57,36 @@ export async function createUser(prevState: string | undefined, formData: FormDa
             },
         });
 
-        return 'Erfolg: Benutzer wurde erstellt!';
+        return { success: 'Benutzer wurde erfolgreich erstellt!' };
     } catch (error) {
         console.error('Create User Error:', error);
-        return 'Datenbankfehler beim Erstellen des Benutzers.';
+        return { error: 'Datenbankfehler beim Erstellen des Benutzers.' };
+    }
+}
+
+export async function getUsers() {
+    const session = await auth();
+    if (!session?.user?.email) return [];
+
+    try {
+        const users = await (prisma as any).user.findMany({
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                createdAt: true,
+                _count: {
+                    select: {
+                        accounts: true,
+                        transactions: true,
+                    }
+                }
+            }
+        });
+        return users;
+    } catch (error) {
+        console.error('Fetch Users Error:', error);
+        return [];
     }
 }

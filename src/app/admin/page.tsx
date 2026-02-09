@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormState } from 'react-dom';
-import { createClient, getClients } from '@/actions/admin.actions';
+import { createUser, getUsers } from '@/actions/admin.actions';
 import { useEffect, useState } from 'react';
 import { Lock, Plus, Users, ShieldAlert } from 'lucide-react';
 import { SubmitButton } from '@/components/auth/SubmitButton';
@@ -18,12 +18,12 @@ interface Client {
 }
 
 export default function AdminPage() {
-    const [state, formAction] = useFormState(createClient, null);
+    const [state, formAction] = useFormState(createUser, undefined);
     const [clients, setClients] = useState<Client[]>([]);
     const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
-        getClients().then(setClients);
+        getUsers().then((data) => setClients(data as any));
     }, [state]); // Refresh list when a new user is created
 
     return (

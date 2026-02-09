@@ -57,11 +57,11 @@ export function UserManagement() {
                     <SubmitButton />
 
                     {message && (
-                        <div className={`p-3 rounded-lg text-sm font-medium ${message.startsWith('Erfolg')
+                        <div className={`p-3 rounded-lg text-sm font-medium ${message.success
                                 ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
                                 : 'bg-red-500/10 text-red-500 border border-red-500/20'
                             }`}>
-                            {message}
+                            {message.success || message.error}
                         </div>
                     )}
                 </form>
