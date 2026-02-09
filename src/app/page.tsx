@@ -72,7 +72,7 @@ export default function LandingPage() {
 
             {/* Footer */}
             <footer className="py-8 border-t border-white/5 text-center text-gray-500 text-sm">
-                <p>&copy; {new Date().getFullYear()} Member Business. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} Member Business. All rights reserved. (v1.1)</p>
             </footer>
         </div>
     );
