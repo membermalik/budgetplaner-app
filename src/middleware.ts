@@ -9,5 +9,6 @@ export const config = {
     // - /api (API routes)
     // - /_next (Static files)
     // - /login (Auth page)
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login|$).*)'],
+    // - /register (Register page)
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login|register|$).*)'],
 };
