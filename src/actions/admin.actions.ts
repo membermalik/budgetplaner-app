@@ -23,7 +23,7 @@ export async function createClient(prevState: any, formData: FormData) {
     // 2. Check if user is ADMIN
     // Note: We need to extend the session type to include role, 
     // but for now we'll check the DB directly for security.
-    const adminUser = await prisma.user.findUnique({
+    const adminUser = await (prisma as any).user.findUnique({
         where: { email: session.user.email },
     });
 
@@ -45,7 +45,7 @@ export async function createClient(prevState: any, formData: FormData) {
     const { name, email, password } = validatedFields.data;
 
     // 4. Check uniqueness
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await (prisma as any).user.findUnique({
         where: { email },
     });
 
@@ -57,7 +57,7 @@ export async function createClient(prevState: any, formData: FormData) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        await prisma.user.create({
+        await (prisma as any).user.create({
             data: {
                 name,
                 email,
@@ -78,13 +78,13 @@ export async function getClients() {
     const session = await auth();
     if (!session?.user?.email) return [];
 
-    const adminUser = await prisma.user.findUnique({
+    const adminUser = await (prisma as any).user.findUnique({
         where: { email: session.user.email },
     });
 
     if (adminUser?.role !== 'ADMIN') return [];
 
-    return await prisma.user.findMany({
+    return await (prisma as any).user.findMany({
         where: { role: 'USER' },
         orderBy: { createdAt: 'desc' },
         select: {

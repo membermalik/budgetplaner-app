@@ -22,7 +22,7 @@ export async function register(prevState: string | undefined, formData: FormData
     const { email, password, name } = validatedFields.data;
 
     try {
-        const existingUser = await prisma.user.findUnique({
+        const existingUser = await (prisma as any).user.findUnique({
             where: { email },
         });
 
@@ -32,7 +32,7 @@ export async function register(prevState: string | undefined, formData: FormData
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await prisma.user.create({
+        await (prisma as any).user.create({
             data: {
                 email,
                 password: hashedPassword,
