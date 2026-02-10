@@ -279,63 +279,66 @@ export function TransactionForm({
                 </div>
             </div>
 
-            {/* Recurring Toggle */}
-            {(!editTransaction || editRecurringTransaction) && (
-                <div className="p-3 rounded-xl bg-surface border border-surface-border space-y-3">
-                    {!editRecurringTransaction && (
-                        <label className="flex items-center justify-between cursor-pointer group">
-                            <div className="flex items-center gap-2">
-                                <div className={cn("p-1.5 rounded-lg transition-colors", isRecurring ? "bg-accent/10 text-accent" : "bg-surface-hover text-text-dim")}>
-                                    <RefreshCw size={16} />
+                {/* Recurring Toggle & Fields */}
+                {(!editTransaction || editRecurringTransaction) && (
+                    <>
+                         {!editRecurringTransaction && (
+                            <div className="sm:col-span-2 flex items-center gap-3 p-3 rounded-xl bg-surface border border-surface-border">
+                                <div className={cn("p-2 rounded-lg transition-colors", isRecurring ? "bg-accent/10 text-accent" : "bg-surface-hover text-text-dim")}>
+                                    <RefreshCw size={18} />
                                 </div>
-                                <div>
-                                    <p className="text-sm font-medium text-text-main">Wiederkehrend</p>
+                                <div className="flex-1">
+                                    <p className="text-sm font-medium text-text-main">Wiederkehrende Zahlung</p>
+                                    <p className="text-xs text-text-dim">Automatisch jeden Monat buchen</p>
                                 </div>
-                            </div>
-                            <input
-                                type="checkbox"
-                                checked={isRecurring}
-                                onChange={(e) => setIsRecurring(e.target.checked)}
-                                className="w-4 h-4 rounded border-surface-border bg-surface text-accent focus:ring-accent transition-all cursor-pointer"
-                            />
-                        </label>
-                    )}
-
-                    {isRecurring && (
-                        <div className="animate-in slide-in-from-top-2 fade-in space-y-3 pt-2 border-t border-surface-border/50">
-                            <div className="grid grid-cols-2 gap-3">
-                                <Input
-                                    label="Startdatum"
-                                    type="date"
-                                    value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    wrapperClassName="mb-0"
-                                />
-                                <Input
-                                    label="Enddatum"
-                                    type="date"
-                                    value={endDate}
-                                    onChange={(e) => setEndDate(e.target.value)}
-                                    wrapperClassName="mb-0"
+                                <input
+                                    type="checkbox"
+                                    checked={isRecurring}
+                                    onChange={(e) => setIsRecurring(e.target.checked)}
+                                    className="w-5 h-5 rounded border-surface-border bg-surface text-accent focus:ring-accent transition-all cursor-pointer"
                                 />
                             </div>
+                        )}
 
-                            <Input
-                                label="Tag im Monat (1-31)"
-                                type="number"
-                                min="1"
-                                max="31"
-                                value={dayOfMonth}
-                                onChange={(e) => {
-                                    const val = parseInt(e.target.value);
-                                    if (val >= 1 && val <= 31) setDayOfMonth(e.target.value);
-                                }}
-                                wrapperClassName="mb-0"
-                            />
-                        </div>
-                    )}
-                </div>
-            )}
+                        {isRecurring && (
+                            <>
+                                <div className="sm:col-span-1">
+                                    <Input
+                                        label="Startdatum"
+                                        type="date"
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                        wrapperClassName="mb-0"
+                                    />
+                                </div>
+                                <div className="sm:col-span-1">
+                                    <Input
+                                        label="Enddatum (Optional)"
+                                        type="date"
+                                        value={endDate}
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                        wrapperClassName="mb-0"
+                                    />
+                                </div>
+                                <div className="sm:col-span-2">
+                                    <Input
+                                        label="Tag im Monat (1-31)"
+                                        type="number"
+                                        min="1"
+                                        max="31"
+                                        value={dayOfMonth}
+                                        onChange={(e) => {
+                                            const val = parseInt(e.target.value);
+                                            if (val >= 1 && val <= 31) setDayOfMonth(e.target.value);
+                                        }}
+                                        wrapperClassName="mb-0"
+                                    />
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
+            </div>
 
             <div className="sticky bottom-0 left-0 right-0 pt-4 -mb-4 pb-4 bg-surface/95 backdrop-blur-sm border-t border-surface-border flex gap-2 z-10 transition-all">
                 <Button type="submit" size="lg" disabled={isLoading} className="flex-1 shadow-lg shadow-accent/20">
@@ -356,6 +359,6 @@ export function TransactionForm({
                     </Button>
                 )}
             </div>
-        </form>
+        </form >
     );
 }
