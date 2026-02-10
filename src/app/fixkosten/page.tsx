@@ -15,7 +15,7 @@ export default function RecurringPage() {
 
     const handleAdd = () => {
         setEditRecurringTransaction(null);
-        setInitialIsRecurring(true);
+        setInitialIsRecurring(false); // Changed to false to start clean
         setShowModal(true);
     };
 

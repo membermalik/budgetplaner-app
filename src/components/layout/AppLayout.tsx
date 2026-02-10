@@ -91,16 +91,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                                 <NotificationsCenter />
                             </div>
 
-                            {/* Transaction Button */}
-                            <Button
-                                variant="primary"
-                                size="sm"
-                                onClick={() => setShowTransactionModal(true)}
-                                className="h-10 px-6 rounded-full shadow-lg shadow-accent/20 flex items-center gap-2"
-                            >
-                                <Plus size={18} />
-                                <span>Neu</span>
-                            </Button>
+                            {/* Transaction Button - Hide on Fixkosten page as it has its own */}
+                            {pathname !== '/fixkosten' && (
+                                <Button
+                                    variant="primary"
+                                    size="sm"
+                                    onClick={() => setShowTransactionModal(true)}
+                                    className="h-10 px-6 rounded-full shadow-lg shadow-accent/20 flex items-center gap-2"
+                                >
+                                    <Plus size={18} />
+                                    <span>Neu</span>
+                                </Button>
+                            )}
                         </div>
                     </div>
 
