@@ -277,12 +277,11 @@ export function TransactionForm({
                         wrapperClassName="mb-0"
                     />
                 </div>
-            </div>
 
                 {/* Recurring Toggle & Fields */}
                 {(!editTransaction || editRecurringTransaction) && (
                     <>
-                         {!editRecurringTransaction && (
+                        {!editRecurringTransaction && (
                             <div className="sm:col-span-2 flex items-center gap-3 p-3 rounded-xl bg-surface border border-surface-border">
                                 <div className={cn("p-2 rounded-lg transition-colors", isRecurring ? "bg-accent/10 text-accent" : "bg-surface-hover text-text-dim")}>
                                     <RefreshCw size={18} />
@@ -340,7 +339,7 @@ export function TransactionForm({
                 )}
             </div>
 
-            <div className="sticky bottom-0 left-0 right-0 pt-4 -mb-4 pb-4 bg-surface/95 backdrop-blur-sm border-t border-surface-border flex gap-2 z-10 transition-all">
+            <div className="flex gap-3 pt-6 mt-2 border-t border-surface-border/50">
                 <Button type="submit" size="lg" disabled={isLoading} className="flex-1 shadow-lg shadow-accent/20">
                     {isLoading
                         ? isEdit ? 'Speichert...' : 'Hinzufügen...'
