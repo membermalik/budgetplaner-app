@@ -1,7 +1,8 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 interface ModalProps {
@@ -36,9 +37,17 @@ export function Modal({
         };
     }, [isOpen, onClose]);
 
-    if (!isOpen) return null;
+    // Handle client-side mounting for Portal
+    const [mounted, setMounted] = useState(false);
 
-    return (
+    useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
+
+    if (!isOpen || !mounted) return null;
+
+    return createPortal(
         <div className="relative z-[1000]">
             {/* Backdrop */}
             <div
@@ -84,6 +93,7 @@ export function Modal({
                 {/* Click outside listener area */}
                 <div className="fixed inset-0 -z-10" onClick={onClose} />
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

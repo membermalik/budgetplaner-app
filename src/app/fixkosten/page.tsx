@@ -33,8 +33,7 @@ export default function RecurringPage() {
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500 max-w-4xl mx-auto">
-            <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold">Fixkosten</h2>
+            <div className="flex items-center justify-end">
                 <Button
                     variant="primary"
                     size="sm"
