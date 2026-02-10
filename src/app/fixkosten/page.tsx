@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { RecurringManager } from '@/components/settings/RecurringManager';
 import { Modal } from '@/components/ui/Modal';
-import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { TransactionForm } from '@/components/transactions/TransactionForm';
 import { RecurringTransaction } from '@/types';
@@ -36,8 +35,14 @@ export default function RecurringPage() {
         <div className="space-y-6 animate-in fade-in duration-500 max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Fixkosten</h2>
-                <Button onClick={handleAdd} className="gap-2 shadow-lg shadow-accent/20">
-                    <Plus size={18} /> Neuer Eintrag
+                <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleAdd}
+                    className="h-10 px-6 rounded-full shadow-lg shadow-accent/20 flex items-center gap-2"
+                >
+                    <Plus size={18} />
+                    <span>Neu</span>
                 </Button>
             </div>
 
