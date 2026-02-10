@@ -47,6 +47,9 @@ export function TransactionForm({
     const [dayOfMonth, setDayOfMonth] = useState(editRecurringTransaction?.dayOfMonth.toString() || '1');
     const [startDate, setStartDate] = useState(editRecurringTransaction?.startDate || new Date().toISOString().split('T')[0]);
     const [endDate, setEndDate] = useState(editRecurringTransaction?.endDate || '');
+    // New Fields
+    const [noticePeriod, setNoticePeriod] = useState(editRecurringTransaction?.noticePeriod || '');
+    const [notes, setNotes] = useState(editRecurringTransaction?.notes || '');
 
     const [errors, setErrors] = useState<ValidationError[]>([]);
     const [success, setSuccess] = useState(false);
@@ -69,6 +72,8 @@ export function TransactionForm({
             setDayOfMonth(editRecurringTransaction.dayOfMonth.toString());
             setStartDate(editRecurringTransaction.startDate);
             setEndDate(editRecurringTransaction.endDate || '');
+            setNoticePeriod(editRecurringTransaction.noticePeriod || '');
+            setNotes(editRecurringTransaction.notes || '');
         }
     }, [editTransaction, editRecurringTransaction]);
 
@@ -113,21 +118,32 @@ export function TransactionForm({
                     category,
                     dayOfMonth: parseInt(dayOfMonth) || 1,
                     startDate,
-                    endDate: endDate || undefined
+                    endDate: endDate || undefined,
+                    noticePeriod: noticePeriod || undefined,
+                    notes: notes || undefined
                     // accountId removed as it's not supported in RecurringTransaction type yet
                 });
             } else if (isRecurring && !editTransaction) {
                 // Add Recurring Transaction
-                addRecurringTransaction({
-                    text: text.trim(),
-                    amount: finalAmount,
-                    category,
-                    interval: 'monthly',
-                    dayOfMonth: parseInt(dayOfMonth) || 1,
-                    startDate,
-                    endDate: endDate || undefined
-                    // accountId removed
-                });
+                try {
+                    await addRecurringTransaction({
+                        text: text.trim(),
+                        amount: finalAmount,
+                        category,
+                        interval: 'monthly',
+                        dayOfMonth: parseInt(dayOfMonth) || 1,
+                        startDate,
+                        endDate: endDate || undefined,
+                        noticePeriod: noticePeriod || undefined,
+                        notes: notes || undefined,
+                        history: [] // Init empty
+                        // accountId removed
+                    });
+                } catch (err: any) {
+                    toast.error(`Fehler: ${err.message}`);
+                    setIsLoading(false);
+                    return; // Stop execution
+                }
             } else if (editTransaction) {
                 // Update Normal Transaction
                 updateTransaction(editTransaction.id, {
@@ -299,41 +315,63 @@ export function TransactionForm({
                             </div>
                         )}
 
-                        {isRecurring && (
-                            <>
-                                <div className="sm:col-span-1">
-                                    <Input
-                                        label="Startdatum"
-                                        type="date"
-                                        value={startDate}
-                                        onChange={(e) => setStartDate(e.target.value)}
-                                        wrapperClassName="mb-0"
-                                    />
-                                </div>
-                                <div className="sm:col-span-1">
-                                    <Input
-                                        label="Enddatum (Optional)"
-                                        type="date"
-                                        value={endDate}
-                                        onChange={(e) => setEndDate(e.target.value)}
-                                        wrapperClassName="mb-0"
-                                    />
-                                </div>
-                                <div className="sm:col-span-2">
-                                    <Input
-                                        label="Tag im Monat (1-31)"
-                                        type="number"
-                                        min="1"
-                                        max="31"
-                                        value={dayOfMonth}
-                                        onChange={(e) => {
-                                            const val = parseInt(e.target.value);
-                                            if (val >= 1 && val <= 31) setDayOfMonth(e.target.value);
-                                        }}
-                                        wrapperClassName="mb-0"
-                                    />
-                                </div>
-                            </>
+                        {isRecurring && (<>
+                            <div className="sm:col-span-1">
+                                <Input
+                                    label="Startdatum"
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    wrapperClassName="mb-0"
+                                />
+                            </div>
+                            <div className="sm:col-span-1">
+                                <Input
+                                    label="Enddatum (Optional)"
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    wrapperClassName="mb-0"
+                                />
+                            </div>
+                            <div className="sm:col-span-2">
+                                <Input
+                                    label="Tag im Monat (1-31)"
+                                    type="number"
+                                    min="1"
+                                    max="31"
+                                    value={dayOfMonth}
+                                    onChange={(e) => {
+                                        const val = parseInt(e.target.value);
+                                        if (val >= 1 && val <= 31) setDayOfMonth(e.target.value);
+                                    }}
+                                    wrapperClassName="mb-0"
+                                />
+                            </div>
+
+                            {/* New Fields for Fixkosten Improvements */}
+                            <div className="sm:col-span-2">
+                                <Input
+                                    label="Kündigungsfrist (Optional)"
+                                    placeholder="z.B. 3 Monate zum Monatsende"
+                                    value={noticePeriod}
+                                    onChange={(e) => setNoticePeriod(e.target.value)}
+                                    wrapperClassName="mb-0"
+                                />
+                            </div>
+                            <div className="sm:col-span-2">
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-text-dim mb-1.5 ml-1">
+                                    Notizen (Optional)
+                                </label>
+                                <textarea
+                                    className="w-full px-4 py-3 bg-surface-active border border-surface-border rounded-xl text-text-main focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all resize-none text-sm placeholder:text-text-dim/50"
+                                    rows={3}
+                                    placeholder="Vertragsnummer, Kundennummer, sonstige Infos..."
+                                    value={notes}
+                                    onChange={(e) => setNotes(e.target.value)}
+                                />
+                            </div>
+                        </>
                         )}
                     </>
                 )}

@@ -39,6 +39,14 @@ export interface RecurringTransaction {
     endDate?: string; // ISO Date string (YYYY-MM-DD), optional
     lastExecuted: string | null; // ISO Date string
     isActive: boolean;
+    noticePeriod?: string;
+    notes?: string;
+    history: { date: string; changes: string[] }[];
+}
+
+export interface RecurringTransactionHistory {
+    date: string;
+    changes: string[];
 }
 
 export type CategoryMap = Record<string, Category>;

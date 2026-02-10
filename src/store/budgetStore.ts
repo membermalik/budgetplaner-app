@@ -128,13 +128,18 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
     // Recurring Transaction Actions
     addRecurringTransaction: async (transaction) => {
         try {
+            set({ error: null });
             const newRec = await createRecurringTransaction(transaction);
             if (newRec) {
                 set(state => ({
                     recurringTransactions: [...state.recurringTransactions, newRec]
                 }));
             }
-        } catch (e) { console.error(e); }
+        } catch (e: any) {
+            console.error("Store Add Error:", e);
+            set({ error: e.message || "Failed to add transaction" });
+            throw e; // Rethrow so component knows
+        }
     },
 
     deleteRecurringTransaction: async (id) => {
