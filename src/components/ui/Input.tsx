@@ -7,12 +7,13 @@ import { AlertCircle } from 'lucide-react';
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
     error?: string;
+    wrapperClassName?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-    ({ className, label, id, error, ...props }, ref) => {
+    ({ className, wrapperClassName, label, id, error, ...props }, ref) => {
         return (
-            <div className="mb-6 group">
+            <div className={cn("mb-6 group", wrapperClassName)}>
                 {label && (
                     <label
                         htmlFor={id}

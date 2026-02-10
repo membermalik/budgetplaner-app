@@ -182,171 +182,180 @@ export function TransactionForm({
     };
 
     return (
-        <Card>
-            <h3 className="font-outfit text-lg font-bold text-text-main mb-6">
-                {editTransaction ? 'Eintrag bearbeiten' : editRecurringTransaction ? 'Dauerauftrag bearbeiten' : 'Neue Transaktion'}
-            </h3>
-            <form onSubmit={handleSubmit}>
-                {/* Type Toggle */}
-                <div className="flex p-1 bg-surface border border-surface-border rounded-xl mb-6 gap-1">
-                    <button
-                        type="button"
-                        onClick={() => setType('expense')}
-                        className={cn(
-                            "flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2",
-                            type === 'expense'
-                                ? "bg-danger text-white shadow-md shadow-danger/20"
-                                : "text-text-dim hover:bg-surface-hover hover:text-text-main"
-                        )}
-                    >
-                        <ArrowDownCircle size={16} />
-                        Ausgabe
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setType('income')}
-                        className={cn(
-                            "flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2",
-                            type === 'income'
-                                ? "bg-success text-white shadow-md shadow-success/20"
-                                : "text-text-dim hover:bg-surface-hover hover:text-text-main"
-                        )}
-                    >
-                        <ArrowUpCircle size={16} />
-                        Einnahme
-                    </button>
+        // Card wrapper removed as Modal provides the container
+        <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Type Toggle */}
+            <div className="flex p-1 bg-surface border border-surface-border rounded-xl gap-1">
+                <button
+                    type="button"
+                    onClick={() => setType('expense')}
+                    className={cn(
+                        "flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2",
+                        type === 'expense'
+                            ? "bg-danger text-white shadow-md shadow-danger/20"
+                            : "text-text-dim hover:bg-surface-hover hover:text-text-main"
+                    )}
+                >
+                    <ArrowDownCircle size={16} />
+                    Ausgabe
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setType('income')}
+                    className={cn(
+                        "flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2",
+                        type === 'income'
+                            ? "bg-success text-white shadow-md shadow-success/20"
+                            : "text-text-dim hover:bg-surface-hover hover:text-text-main"
+                    )}
+                >
+                    <ArrowUpCircle size={16} />
+                    Einnahme
+                </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                    <Input
+                        id="text"
+                        label="Bezeichnung"
+                        value={text}
+                        onChange={(e) => {
+                            setText(e.target.value);
+                            if (errors.find((e) => e.field === 'text')) {
+                                setErrors(errors.filter((e) => e.field !== 'text'));
+                            }
+                        }}
+                        placeholder="z.B. Gehalt, Miete"
+                        error={getFieldError('text')}
+                        disabled={isLoading}
+                        wrapperClassName="mb-0"
+                    />
                 </div>
 
-                <Input
-                    id="text"
-                    label="Bezeichnung"
-                    value={text}
-                    onChange={(e) => {
-                        setText(e.target.value);
-                        if (errors.find((e) => e.field === 'text')) {
-                            setErrors(errors.filter((e) => e.field !== 'text'));
-                        }
-                    }}
-                    placeholder="z.B. Gehalt, Miete, Einkauf"
-                    error={getFieldError('text')}
-                    disabled={isLoading}
-                />
-                <Input
-                    id="amount"
-                    label="Betrag (€)"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={amount}
-                    onChange={(e) => {
-                        setAmount(e.target.value);
-                        if (errors.find((e) => e.field === 'amount')) {
-                            setErrors(errors.filter((e) => e.field !== 'amount'));
-                        }
-                    }}
-                    placeholder="Betrag eingeben (z.B. 100)"
-                    error={getFieldError('amount')}
-                    disabled={isLoading}
-                />
-                <Select
-                    id="category"
-                    label="Kategorie"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    options={categoryOptions}
-                    disabled={isLoading}
-                />
+                <div className="sm:col-span-1">
+                    <Input
+                        id="amount"
+                        label="Betrag (€)"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={amount}
+                        onChange={(e) => {
+                            setAmount(e.target.value);
+                            if (errors.find((e) => e.field === 'amount')) {
+                                setErrors(errors.filter((e) => e.field !== 'amount'));
+                            }
+                        }}
+                        placeholder="0.00"
+                        error={getFieldError('amount')}
+                        disabled={isLoading}
+                        wrapperClassName="mb-0"
+                    />
+                </div>
 
-                {/* Account Selection */}
-                <Select
-                    id="account"
-                    label="Konto"
-                    value={selectedAccountId}
-                    onChange={(e) => setSelectedAccountId(e.target.value)}
-                    options={accountOptions}
-                    disabled={isLoading || !!accountId} // Disable if fixed account passed via prop
-                />
+                <div className="sm:col-span-1">
+                    <Select
+                        id="category"
+                        label="Kategorie"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        options={categoryOptions}
+                        disabled={isLoading}
+                        wrapperClassName="mb-0"
+                    />
+                </div>
 
-                {/* Recurring Toggle - Only for new transactions OR when editing recurring */}
-                {(!editTransaction || editRecurringTransaction) && (
-                    <div className="mb-6 p-4 rounded-xl bg-surface border border-surface-border space-y-4">
-                        {!editRecurringTransaction && (
-                            <label className="flex items-center justify-between cursor-pointer group">
-                                <div className="flex items-center gap-3">
-                                    <div className={cn("p-2 rounded-lg transition-colors", isRecurring ? "bg-accent/10 text-accent" : "bg-surface-hover text-text-dim")}>
-                                        <RefreshCw size={18} />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-text-main">Wiederkehrende Zahlung</p>
-                                        <p className="text-xs text-text-dim">Automatisch jeden Monat buchen</p>
-                                    </div>
+                <div className="sm:col-span-2">
+                    <Select
+                        id="account"
+                        label="Konto"
+                        value={selectedAccountId}
+                        onChange={(e) => setSelectedAccountId(e.target.value)}
+                        options={accountOptions}
+                        disabled={isLoading || !!accountId}
+                        wrapperClassName="mb-0"
+                    />
+                </div>
+            </div>
+
+            {/* Recurring Toggle */}
+            {(!editTransaction || editRecurringTransaction) && (
+                <div className="p-3 rounded-xl bg-surface border border-surface-border space-y-3">
+                    {!editRecurringTransaction && (
+                        <label className="flex items-center justify-between cursor-pointer group">
+                            <div className="flex items-center gap-2">
+                                <div className={cn("p-1.5 rounded-lg transition-colors", isRecurring ? "bg-accent/10 text-accent" : "bg-surface-hover text-text-dim")}>
+                                    <RefreshCw size={16} />
                                 </div>
-                                <input
-                                    type="checkbox"
-                                    checked={isRecurring}
-                                    onChange={(e) => setIsRecurring(e.target.checked)}
-                                    className="w-5 h-5 rounded border-surface-border bg-surface text-accent focus:ring-accent transition-all cursor-pointer"
-                                />
-                            </label>
-                        )}
-
-                        {isRecurring && (
-                            <div className="animate-in slide-in-from-top-2 fade-in space-y-4 pt-2 border-t border-white/5">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <Input
-                                        label="Startdatum"
-                                        type="date"
-                                        value={startDate}
-                                        onChange={(e) => setStartDate(e.target.value)}
-                                    />
-                                    <Input
-                                        label="Enddatum (Optional)"
-                                        type="date"
-                                        value={endDate}
-                                        onChange={(e) => setEndDate(e.target.value)}
-                                    />
+                                <div>
+                                    <p className="text-sm font-medium text-text-main">Wiederkehrend</p>
                                 </div>
+                            </div>
+                            <input
+                                type="checkbox"
+                                checked={isRecurring}
+                                onChange={(e) => setIsRecurring(e.target.checked)}
+                                className="w-4 h-4 rounded border-surface-border bg-surface text-accent focus:ring-accent transition-all cursor-pointer"
+                            />
+                        </label>
+                    )}
 
+                    {isRecurring && (
+                        <div className="animate-in slide-in-from-top-2 fade-in space-y-3 pt-2 border-t border-surface-border/50">
+                            <div className="grid grid-cols-2 gap-3">
                                 <Input
-                                    label="Tag der Zahlung (1-31)"
-                                    type="number"
-                                    min="1"
-                                    max="31"
-                                    value={dayOfMonth}
-                                    onChange={(e) => {
-                                        const val = parseInt(e.target.value);
-                                        if (val >= 1 && val <= 31) setDayOfMonth(e.target.value);
-                                    }}
+                                    label="Startdatum"
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    wrapperClassName="mb-0"
+                                />
+                                <Input
+                                    label="Enddatum"
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    wrapperClassName="mb-0"
                                 />
                             </div>
-                        )}
-                    </div>
-                )}
 
-                <div className="flex gap-2">
-                    <Button type="submit" size="lg" disabled={isLoading} className="flex-1">
-                        {isLoading
-                            ? isEdit
-                                ? 'Wird gespeichert...'
-                                : 'Wird hinzugefügt...'
-                            : isEdit
-                                ? 'Speichern'
-                                : 'Hinzufügen'}
-                    </Button>
-                    {isEdit && (
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            size="lg"
-                            onClick={handleCancel}
-                            disabled={isLoading}
-                            className="flex-1"
-                        >
-                            Abbrechen
-                        </Button>
+                            <Input
+                                label="Tag im Monat (1-31)"
+                                type="number"
+                                min="1"
+                                max="31"
+                                value={dayOfMonth}
+                                onChange={(e) => {
+                                    const val = parseInt(e.target.value);
+                                    if (val >= 1 && val <= 31) setDayOfMonth(e.target.value);
+                                }}
+                                wrapperClassName="mb-0"
+                            />
+                        </div>
                     )}
                 </div>
-            </form>
-        </Card>
+            )}
+
+            <div className="flex gap-2 pt-2">
+                <Button type="submit" size="lg" disabled={isLoading} className="flex-1">
+                    {isLoading
+                        ? isEdit ? 'Speichert...' : 'Hinzufügen...'
+                        : isEdit ? 'Speichern' : 'Hinzufügen'}
+                </Button>
+                {isEdit && (
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        size="lg"
+                        onClick={handleCancel}
+                        disabled={isLoading}
+                        className="flex-1"
+                    >
+                        Abbrechen
+                    </Button>
+                )}
+            </div>
+        </form>
     );
 }

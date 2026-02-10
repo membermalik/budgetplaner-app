@@ -7,16 +7,17 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
     label?: string;
     options: { value: string; label: string }[];
     error?: string;
+    wrapperClassName?: string;
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-    ({ className, label, id, options, error, ...props }, ref) => {
+    ({ className, wrapperClassName, label, id, options, error, ...props }, ref) => {
         return (
-            <div className="mb-6">
+            <div className={cn("mb-6", wrapperClassName)}>
                 {label && (
                     <label
                         htmlFor={id}
-                        className="block font-outfit text-xs font-semibold text-white/80 mb-3"
+                        className="block font-outfit text-xs font-semibold text-text-dim mb-2 uppercase tracking-wider"
                     >
                         {label}
                     </label>
