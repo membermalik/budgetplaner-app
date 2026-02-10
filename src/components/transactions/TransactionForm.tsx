@@ -7,7 +7,8 @@ import { Select } from '@/components/ui/Select';
 import { useBudgetStore } from '@/store/budgetStore';
 import { Transaction, RecurringTransaction, ValidationError } from '@/types';
 import { validateTransaction } from '@/lib/utils';
-import { AlertCircle, CheckCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, CheckCircle, RefreshCw, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface TransactionFormProps {
     editTransaction?: Transaction | null;
@@ -187,25 +188,31 @@ export function TransactionForm({
             </h3>
             <form onSubmit={handleSubmit}>
                 {/* Type Toggle */}
-                <div className="flex p-1 bg-black/20 border border-white/5 rounded-xl mb-6">
+                <div className="flex p-1 bg-surface border border-surface-border rounded-xl mb-6 gap-1">
                     <button
                         type="button"
                         onClick={() => setType('expense')}
-                        className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${type === 'expense'
-                            ? 'bg-danger text-white shadow-lg shadow-danger/25'
-                            : 'text-text-dim hover:text-white'
-                            }`}
+                        className={cn(
+                            "flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2",
+                            type === 'expense'
+                                ? "bg-danger text-white shadow-md shadow-danger/20"
+                                : "text-text-dim hover:bg-surface-hover hover:text-text-main"
+                        )}
                     >
+                        <ArrowDownCircle size={16} />
                         Ausgabe
                     </button>
                     <button
                         type="button"
                         onClick={() => setType('income')}
-                        className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${type === 'income'
-                            ? 'bg-success text-white shadow-lg shadow-success/25'
-                            : 'text-text-dim hover:text-white'
-                            }`}
+                        className={cn(
+                            "flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2",
+                            type === 'income'
+                                ? "bg-success text-white shadow-md shadow-success/20"
+                                : "text-text-dim hover:bg-surface-hover hover:text-text-main"
+                        )}
                     >
+                        <ArrowUpCircle size={16} />
                         Einnahme
                     </button>
                 </div>
@@ -262,11 +269,13 @@ export function TransactionForm({
 
                 {/* Recurring Toggle - Only for new transactions OR when editing recurring */}
                 {(!editTransaction || editRecurringTransaction) && (
-                    <div className="mb-6 p-4 rounded-xl bg-surface/50 border border-white/5 space-y-4">
+                    <div className="mb-6 p-4 rounded-xl bg-surface border border-surface-border space-y-4">
                         {!editRecurringTransaction && (
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <RefreshCw className={`w-5 h-5 ${isRecurring ? 'text-accent' : 'text-text-dim'}`} />
+                            <label className="flex items-center justify-between cursor-pointer group">
+                                <div className="flex items-center gap-3">
+                                    <div className={cn("p-2 rounded-lg transition-colors", isRecurring ? "bg-accent/10 text-accent" : "bg-surface-hover text-text-dim")}>
+                                        <RefreshCw size={18} />
+                                    </div>
                                     <div>
                                         <p className="text-sm font-medium text-text-main">Wiederkehrende Zahlung</p>
                                         <p className="text-xs text-text-dim">Automatisch jeden Monat buchen</p>
@@ -276,9 +285,9 @@ export function TransactionForm({
                                     type="checkbox"
                                     checked={isRecurring}
                                     onChange={(e) => setIsRecurring(e.target.checked)}
-                                    className="w-5 h-5 rounded border-white/20 bg-black/40 text-accent focus:ring-accent"
+                                    className="w-5 h-5 rounded border-surface-border bg-surface text-accent focus:ring-accent transition-all cursor-pointer"
                                 />
-                            </div>
+                            </label>
                         )}
 
                         {isRecurring && (

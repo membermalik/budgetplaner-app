@@ -41,7 +41,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <div className="flex min-h-screen bg-[--bg-color] transition-colors duration-300">
+        <div className="flex min-h-screen bg-background transition-colors duration-300">
             {/* Sidebar */}
             <Sidebar
                 isOpen={sidebarOpen}
@@ -51,11 +51,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             {/* Main Content Area */}
             <main className="flex-1 min-w-0 lg:pl-64">
                 {/* Mobile Header */}
-                <header className="lg:hidden flex items-center justify-between p-4 border-b border-white/5 bg-surface/50 backdrop-blur-xl sticky top-0 z-30">
+                <header className="lg:hidden flex items-center justify-between p-4 border-b border-surface-border bg-surface/80 backdrop-blur-xl sticky top-0 z-30">
                     <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(true)}>
                         <Menu size={20} />
                     </Button>
-                    <span className="font-outfit font-bold">Pro Finance</span>
+                    <span className="font-outfit font-bold text-text-main">Pro <span className="text-accent">Finance</span></span>
                     <div className="flex items-center gap-2">
                         <Button variant="ghost" size="sm" onClick={() => setShowSearch(true)}>
                             <Search size={20} />
@@ -66,12 +66,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
                 <div className="p-4 lg:p-8 pb-32 max-w-7xl mx-auto space-y-8">
                     {/* Desktop Header / Toolbar */}
-                    <div className="hidden lg:flex items-center justify-between pb-6 border-b border-white/5">
+                    <div className="hidden lg:flex items-center justify-between pb-6 border-b border-surface-border">
                         <div>
-                            <h2 className="text-2xl font-bold text-white capitalize tracking-tight">
+                            <h2 className="text-2xl font-bold text-text-main capitalize tracking-tight font-outfit">
                                 {getTitle()}
                             </h2>
-                            <p className="text-sm text-gray-400 mt-1">Überblick über deine Finanzen</p>
+                            <p className="text-sm text-text-dim mt-1">Überblick über deine Finanzen</p>
                         </div>
 
                         <div className="flex items-center gap-3">
@@ -80,14 +80,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                                 variant="secondary"
                                 size="sm"
                                 onClick={() => setShowSearch(true)}
-                                className="h-10 w-10 p-0 rounded-full flex items-center justify-center bg-gray-800/50 hover:bg-gray-700 text-gray-400 hover:text-white transition-all"
+                                className="h-10 w-10 p-0 rounded-full flex items-center justify-center bg-surface hover:bg-surface-hover text-text-dim hover:text-text-main transition-all border-surface-border"
                                 title="Suche"
                             >
                                 <Search size={18} />
                             </Button>
 
                             {/* Notifications */}
-                            <div className="h-10 w-10 flex items-center justify-center bg-gray-800/50 rounded-full hover:bg-gray-700 transition-all">
+                            <div className="h-10 w-10 flex items-center justify-center bg-surface rounded-full hover:bg-surface-hover transition-all border border-surface-border">
                                 <NotificationsCenter />
                             </div>
 
@@ -96,7 +96,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                                 variant="primary"
                                 size="sm"
                                 onClick={() => setShowTransactionModal(true)}
-                                className="h-10 px-6 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-[0_0_20px_-5px_rgba(37,99,235,0.5)] transition-all flex items-center gap-2"
+                                className="h-10 px-6 rounded-full shadow-lg shadow-accent/20 flex items-center gap-2"
                             >
                                 <Plus size={18} />
                                 <span>Neu</span>

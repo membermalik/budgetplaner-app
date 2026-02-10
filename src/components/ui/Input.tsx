@@ -12,11 +12,11 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export const Input = forwardRef<HTMLInputElement, InputProps>(
     ({ className, label, id, error, ...props }, ref) => {
         return (
-            <div className="mb-6">
+            <div className="mb-6 group">
                 {label && (
                     <label
                         htmlFor={id}
-                        className="block font-outfit text-xs font-semibold text-white/80 mb-3"
+                        className="block font-outfit text-xs font-semibold text-text-dim mb-2 uppercase tracking-wider group-focus-within:text-accent transition-colors"
                     >
                         {label}
                     </label>
@@ -25,16 +25,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                     <input
                         id={id}
                         ref={ref}
+                        aria-invalid={!!error}
                         className={cn(
-                            'w-full bg-surface border rounded-2xl',
-                            'px-5 py-4 text-text-main font-inter text-[0.95rem]',
-                            'transition-all duration-300',
+                            'w-full bg-surface border rounded-xl',
+                            'px-4 py-3 text-text-main font-inter text-base',
+                            'transition-all duration-200',
                             'placeholder:text-text-dim/50',
-                            'focus:outline-none focus:bg-surface-hover',
-                            'focus:shadow-[0_0_0_4px_var(--accent-glow)]',
+                            'focus:outline-none focus:bg-surface-hover focus:ring-2 focus:ring-accent focus:border-transparent',
+                            // Error State
                             error
-                                ? 'border-danger/50 focus:border-danger'
-                                : 'border-surface-border focus:border-accent/50 hover:border-surface-border/80',
+                                ? 'border-danger/50 focus:ring-danger text-danger'
+                                : 'border-surface-border hover:border-surface-active',
                             className
                         )}
                         {...props}
@@ -44,7 +45,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                     )}
                 </div>
                 {error && (
-                    <p className="mt-2 text-sm text-danger flex items-center gap-1">
+                    <p className="mt-2 text-sm text-danger flex items-center gap-1 font-medium animate-in">
                         {error}
                     </p>
                 )}

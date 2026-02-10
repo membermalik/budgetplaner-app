@@ -57,7 +57,7 @@ export function BalanceCard() {
                 <p className="font-outfit text-sm font-medium text-text-dim mb-2 uppercase tracking-wider">
                     Gesamtbilanz
                 </p>
-                <p className="font-outfit text-5xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-lg">
+                <p className="font-outfit text-5xl sm:text-6xl font-bold tracking-tight text-text-main drop-shadow-sm">
                     {formatCurrency(total, settings.currency)}
                 </p>
             </Card>
@@ -67,14 +67,14 @@ export function BalanceCard() {
                 {/* Income Card */}
                 <Card variant="stat">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/20">
+                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-success/10 text-success ring-1 ring-success/20">
                             <TrendingUp size={24} />
                         </div>
                         <div>
                             <p className="font-outfit text-xs font-medium text-text-dim mb-1 uppercase tracking-wider">
                                 Einnahmen
                             </p>
-                            <p className="font-outfit text-2xl font-bold text-emerald-400">
+                            <p className="font-outfit text-2xl font-bold text-success">
                                 + {formatCurrency(income, settings.currency)}
                             </p>
                         </div>
@@ -84,14 +84,14 @@ export function BalanceCard() {
                 {/* Expense Card */}
                 <Card variant="stat">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-red-500/10 text-red-500 ring-1 ring-red-500/20">
+                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-danger/10 text-danger ring-1 ring-danger/20">
                             <TrendingDown size={24} />
                         </div>
                         <div>
                             <p className="font-outfit text-xs font-medium text-text-dim mb-1 uppercase tracking-wider">
                                 Ausgaben
                             </p>
-                            <p className="font-outfit text-2xl font-bold text-red-400">
+                            <p className="font-outfit text-2xl font-bold text-danger">
                                 - {formatCurrency(expense, settings.currency)}
                             </p>
                         </div>

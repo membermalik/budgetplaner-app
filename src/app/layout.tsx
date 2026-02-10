@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="de">
-            <body>
+            <body className="font-inter antialiased bg-background text-text-main min-h-screen">
                 <ThemeProvider>
                     <StoreInitializer />
                     <RecurringEvaluator />

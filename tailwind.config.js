@@ -9,17 +9,31 @@ module.exports = {
         extend: {
             colors: {
                 background: 'var(--bg-color)',
-                surface: 'var(--surface)',
-                'surface-border': 'var(--surface-border)',
-                'surface-hover': 'var(--surface-hover)',
-                accent: 'var(--accent)',
-                'accent-glow': 'var(--accent-glow)',
+                surface: {
+                    DEFAULT: 'var(--surface)',
+                    hover: 'var(--surface-hover)',
+                    active: 'var(--surface-active)',
+                    border: 'var(--surface-border)',
+                },
+                accent: {
+                    DEFAULT: 'var(--accent)',
+                    foreground: 'var(--accent-foreground)',
+                    glow: 'var(--accent-glow)',
+                },
                 secondary: 'var(--secondary)',
                 success: 'var(--success)',
                 warning: 'var(--warning)',
                 danger: 'var(--danger)',
+                text: {
+                    main: 'var(--text-main)',
+                    dim: 'var(--text-dim)',
+                    inverse: 'var(--text-inverse)',
+                },
+                // Legacy mappings for backward compatibility during refactor
                 'text-main': 'var(--text-main)',
                 'text-dim': 'var(--text-dim)',
+                'surface-border': 'var(--surface-border)',
+                'surface-hover': 'var(--surface-hover)',
             },
             fontFamily: {
                 outfit: ['Outfit', 'sans-serif'],

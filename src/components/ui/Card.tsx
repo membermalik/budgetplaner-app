@@ -13,9 +13,11 @@ export function Card({ children, className, variant = 'default', ...props }: Car
     return (
         <div
             className={cn(
-                'glass rounded-3xl p-6 sm:p-8',
-                'transition-all duration-500 ease-out',
-                'hover:shadow-glow hover:border-accent/30',
+                'rounded-3xl p-6 sm:p-8 border',
+                'transition-all duration-300',
+                variant === 'default' && 'glass border-surface-border shadow-card',
+                variant === 'hero' && 'glass-strong border-accent/20 shadow-glow',
+                variant === 'stat' && 'bg-surface border-surface-border hover:border-accent/30 hover:shadow-lg',
                 className
             )}
             {...props}

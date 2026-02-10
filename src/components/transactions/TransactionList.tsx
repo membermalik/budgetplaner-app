@@ -115,7 +115,7 @@ export function TransactionList({ onEditTransaction }: TransactionListProps) {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Nach Beschreibung suchen..."
-                            className="w-full bg-[var(--input-bg)] border border-[var(--surface-border)] hover:border-accent/50 rounded-2xl pl-11 pr-5 py-3 text-text-main font-inter text-sm transition-all focus:outline-none focus:border-accent focus:shadow-[0_0_0_4px_var(--accent-glow)] placeholder:text-text-dim/50"
+                            className="w-full bg-surface border border-surface-border hover:border-surface-active rounded-xl pl-11 pr-5 py-3 text-text-main font-inter text-sm transition-all focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 placeholder:text-text-dim/50"
                             aria-label="Transaktionen suchen"
                         />
                     </div>
@@ -126,15 +126,15 @@ export function TransactionList({ onEditTransaction }: TransactionListProps) {
                         />
                         <select
                             value={selectedMonth}
-                            onChange={(e) => setSearchTerm(e.target.value)} // Note: logic error in original code (setSearchTerm instead of setSelectedMonth?), checking context...
-                            className="w-full sm:w-auto bg-[var(--input-bg)] border border-[var(--surface-border)] hover:border-accent/50 rounded-2xl pl-11 pr-10 py-3 text-text-main font-inter text-sm transition-all focus:outline-none focus:border-accent appearance-none cursor-pointer focus:shadow-[0_0_0_4px_var(--accent-glow)]"
+                            onChange={(e) => setSelectedMonth(e.target.value)}
+                            className="w-full sm:w-auto bg-surface border border-surface-border hover:border-surface-active rounded-xl pl-11 pr-10 py-3 text-text-main font-inter text-sm transition-all focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 appearance-none cursor-pointer"
                             aria-label="Nach Monat filtern"
                         >
-                            <option value="all" className="bg-[--bg-color]">
+                            <option value="all" className="bg-surface text-text-main">
                                 Alle Monate
                             </option>
                             {months.map((month) => (
-                                <option key={month} value={month} className="bg-[--bg-color]">
+                                <option key={month} value={month} className="bg-surface text-text-main">
                                     {month}
                                 </option>
                             ))}
