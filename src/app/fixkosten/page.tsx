@@ -3,8 +3,11 @@
 import { useState } from 'react';
 import { RecurringManager } from '@/components/settings/RecurringManager';
 import { Modal } from '@/components/ui/Modal';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
 import { TransactionForm } from '@/components/transactions/TransactionForm';
 import { RecurringTransaction } from '@/types';
+import { Plus } from 'lucide-react';
 
 export default function RecurringPage() {
     const [editRecurringTransaction, setEditRecurringTransaction] = useState<RecurringTransaction | null>(null);
@@ -31,7 +34,12 @@ export default function RecurringPage() {
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold">Fixkosten</h2>
+            <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold">Fixkosten</h2>
+                <Button onClick={handleAdd} className="gap-2 shadow-lg shadow-accent/20">
+                    <Plus size={18} /> Neuer Eintrag
+                </Button>
+            </div>
 
             <RecurringManager
                 onAdd={handleAdd}

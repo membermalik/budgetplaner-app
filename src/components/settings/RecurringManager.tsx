@@ -13,14 +13,11 @@ export function RecurringManager({ onAdd, onEdit }: RecurringManagerProps) {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h4 className="font-outfit font-semibold text-text-main flex items-center gap-2">
-                    <RefreshCw className="w-5 h-5" />
+            <div className="flex items-center gap-2 pb-2 text-text-dim">
+                <RefreshCw className="w-4 h-4" />
+                <h4 className="font-outfit font-medium text-sm uppercase tracking-wider">
                     Daueraufträge & Abos
                 </h4>
-                <Button onClick={onAdd} size="sm" className="gap-2">
-                    <Plus size={16} /> Neu
-                </Button>
             </div>
 
             <div className="space-y-3">
