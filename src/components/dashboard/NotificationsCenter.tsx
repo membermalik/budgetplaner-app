@@ -78,12 +78,12 @@ export function NotificationsCenter() {
                     size="sm"
                     onClick={() => setShowPanel(!showPanel)}
                     title="Benachrichtigungen"
-                    className="relative w-10 h-10 p-0 rounded-full flex items-center justify-center"
+                    className="relative w-12 h-12 p-0 rounded-full flex items-center justify-center bg-surface hover:bg-surface-hover border-surface-border transition-all"
                 >
                     <div className="relative">
-                        <Bell size={18} className="text-text-main" />
+                        <Bell size={24} className="text-text-dim hover:text-text-main transition-colors" />
                         {unreadCount > 0 && (
-                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-danger rounded-full border-2 border-surface"></span>
+                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-danger rounded-full border-2 border-surface"></span>
                         )}
                     </div>
                 </Button>

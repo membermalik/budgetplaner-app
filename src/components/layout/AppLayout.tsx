@@ -80,14 +80,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                                 variant="secondary"
                                 size="sm"
                                 onClick={() => setShowSearch(true)}
-                                className="h-10 w-10 p-0 rounded-full flex items-center justify-center bg-surface hover:bg-surface-hover text-text-dim hover:text-text-main transition-all border-surface-border"
+                                className="h-12 w-12 p-0 rounded-full flex items-center justify-center bg-surface hover:bg-surface-hover text-text-dim hover:text-text-main transition-all border-surface-border"
                                 title="Suche"
                             >
                                 <Search size={24} />
                             </Button>
 
                             {/* Notifications */}
-                            <div className="h-10 w-10 flex items-center justify-center bg-surface rounded-full hover:bg-surface-hover transition-all border border-surface-border">
+                            <div className="h-12 w-12 flex items-center justify-center bg-surface rounded-full hover:bg-surface-hover transition-all border border-surface-border">
                                 <NotificationsCenter />
                             </div>
 
