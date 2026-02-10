@@ -337,8 +337,8 @@ export function TransactionForm({
                 </div>
             )}
 
-            <div className="flex gap-2 pt-2">
-                <Button type="submit" size="lg" disabled={isLoading} className="flex-1">
+            <div className="sticky bottom-0 left-0 right-0 pt-4 -mb-4 pb-4 bg-surface/95 backdrop-blur-sm border-t border-surface-border flex gap-2 z-10 transition-all">
+                <Button type="submit" size="lg" disabled={isLoading} className="flex-1 shadow-lg shadow-accent/20">
                     {isLoading
                         ? isEdit ? 'Speichert...' : 'Hinzufügen...'
                         : isEdit ? 'Speichern' : 'Hinzufügen'}

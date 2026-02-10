@@ -69,7 +69,7 @@ export function Modal({
                 </div>
 
                 {/* Body */}
-                <div className="px-6 sm:px-10 pb-6 sm:pb-8 max-h-[70vh] overflow-y-auto">{children}</div>
+                <div className="px-6 sm:px-10 pb-6 sm:pb-8 flex-1 overflow-y-auto min-h-0">{children}</div>
 
                 {/* Footer */}
                 {footer && (
