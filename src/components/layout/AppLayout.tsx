@@ -49,7 +49,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             />
 
             {/* Main Content Area */}
-            <main className="flex-1 min-w-0 lg:pl-64">
+            <main className="flex-1 min-w-0">
                 {/* Mobile Header */}
                 <header className="lg:hidden flex items-center justify-between p-4 border-b border-surface-border bg-surface/80 backdrop-blur-xl sticky top-0 z-30">
                     <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(true)}>
@@ -58,13 +58,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     <span className="font-outfit font-bold text-text-main">Pro <span className="text-accent">Finance</span></span>
                     <div className="flex items-center gap-2">
                         <Button variant="ghost" size="sm" onClick={() => setShowSearch(true)}>
-                            <Search size={20} />
+                            <Search size={22} />
                         </Button>
                         <NotificationsCenter />
                     </div>
                 </header>
 
-                <div className="p-4 lg:p-8 pb-32 max-w-7xl mx-auto space-y-8">
+                <div className="p-4 lg:p-8 pb-32 w-full max-w-[1600px] mx-auto space-y-8">
                     {/* Desktop Header / Toolbar */}
                     <div className="hidden lg:flex items-center justify-between pb-6 border-b border-surface-border">
                         <div>
@@ -83,7 +83,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                                 className="h-10 w-10 p-0 rounded-full flex items-center justify-center bg-surface hover:bg-surface-hover text-text-dim hover:text-text-main transition-all border-surface-border"
                                 title="Suche"
                             >
-                                <Search size={18} />
+                                <Search size={24} />
                             </Button>
 
                             {/* Notifications */}
