@@ -40,7 +40,7 @@ export async function createTransaction(data: Omit<Transaction, 'id'>): Promise<
                     category: data.category,
                     date: data.date,
                     month: data.month,
-                    accountId: data.accountId,
+                    accountId: data.accountId || null,
                     userId: session.user.id,
                 },
             });
