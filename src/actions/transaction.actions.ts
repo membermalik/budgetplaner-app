@@ -41,7 +41,7 @@ export async function createTransaction(data: Omit<Transaction, 'id'>): Promise<
                     date: data.date,
                     month: data.month,
                     accountId: data.accountId || null,
-                    userId: session.user.id,
+                    userId: session.user.id!,
                 },
             });
 
