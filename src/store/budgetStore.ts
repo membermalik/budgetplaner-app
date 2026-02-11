@@ -92,7 +92,17 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
                 }));
                 // Fetch updated accounts to ensure correct balance
                 const updatedAccounts = await getAccounts();
-                set({ accounts: updatedAccounts });
+                if (updatedAccounts && updatedAccounts.length > 0) {
+                    set({ accounts: updatedAccounts });
+                } else if (updatedAccounts && updatedAccounts.length === 0 && state.accounts.length === 0) {
+                    // Genuine empty state, do nothing or set empty
+                    set({ accounts: [] });
+                } else {
+                    // Check if it's a fetch error or genuine empty. 
+                    // For now, let's trust getAccounts returns [] on error/empty.
+                    // Better: getAccounts should return null on error?
+                    set({ accounts: updatedAccounts });
+                }
             }
         } catch (e) {
             console.error(e);
@@ -106,8 +116,8 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
                 set(state => ({
                     transactions: state.transactions.map(t => t.id === id ? updated : t)
                 }));
-                const accounts = await getAccounts();
-                set({ accounts });
+                const updatedAccounts = await getAccounts();
+                set({ accounts: updatedAccounts });
             }
         } catch (e) { console.error(e); }
     },
@@ -119,8 +129,8 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
                 set(state => ({
                     transactions: state.transactions.filter(t => t.id !== id)
                 }));
-                const accounts = await getAccounts();
-                set({ accounts });
+                const updatedAccounts = await getAccounts();
+                set({ accounts: updatedAccounts });
             }
         } catch (e) { console.error(e); }
     },
