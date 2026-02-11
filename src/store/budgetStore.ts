@@ -235,16 +235,23 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
     // Account Actions
     addAccount: async (account) => {
         try {
-            const newAccount = await createAccount(account);
+            // First create the account with 0 balance if we are going to add a transaction that sets the balance
+            // Otherwise the transaction would add to the existing balance, doubling it.
+            const initialBalance = account.balance;
+            const accountData = { ...account, balance: 0 };
+
+            const newAccount = await createAccount(accountData);
+
             if (newAccount) {
                 set(state => ({
                     accounts: [...state.accounts, newAccount]
                 }));
-                // Create initial transaction if needed
-                if (account.balance > 0 && newAccount.id) {
+
+                // Create initial transaction which will update the balance to initialBalance
+                if (initialBalance > 0 && newAccount.id) {
                     await get().addTransaction({
                         text: 'Startsaldo',
-                        amount: account.balance,
+                        amount: initialBalance,
                         category: 'General',
                         date: formatDate(),
                         month: formatMonth(),
